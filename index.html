@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tyrone James | Portfolio</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
+            color: #eaeaea;
+        }
+        .hero {
+            text-align: center;
+            padding: 80px 20px 60px;
+        }
+
+        .hero img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #00e5ff;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            margin: 0;
+        }
+
+        .hero p {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #b0eaff;
+        }
+        section {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        section h2 {
+            font-size: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #00e5ff;
+            padding-left: 15px;
+        }
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 25px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+        }
+
+        .project-card h3 {
+            margin-top: 0;
+            color: #00e5ff;
+        }
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .skills span {
+            background: rgba(0, 229, 255, 0.15);
+            color: #00e5ff;
+            padding: 10px 16px;
+            border-radius: 25px;
+            font-size: 14px;
+        }
+        .about {
+            max-width: 700px;
+            line-height: 1.8;
+            color: #d9f6ff;
+        }
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(0,0,0,0.3);
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <img src="image/Thevirus.JPG" alt="Profile Picture">
+        <h1>Tyrone James</h1>
+        <p>3BSIT2 • Asiatech College</p>
+    </div>
+    <section>
+        <h2>Projects</h2>
+
+        <div class="projects">
+            <div class="project-card">
+                <h3>Portfolio Website</h3>
+                <p>A modern personal website built with HTML and CSS to showcase my work.</p>
+            </div>
+
+            <div class="project-card">
+                <h3>Python Calculator</h3>
+                <p>A simple calculator program written in Python for practicing logic.</p>
+            </div>
+
+            <div class="project-card">
+                <h3>Mini Web Layouts</h3>
+                <p>Small layout experiments focused on spacing, typography, and design.</p>
+            </div>
+        </div>
+    </section>
+    <section>
+        <h2>Tools & Skills</h2>
+        <div class="skills">
+            <span>HTML</span>
+            <span>CSS</span>
+            <span>Python</span>
+            <span>Sublime Text</span>
+            <span>Git (Learning)</span>
+        </div>
+    </section>
+    <section>
+        <h2>About Me</h2>
+        <div class="about">
+            <p>
+                I’m a beginner developer focused on learning by building.
+                I enjoy experimenting with layouts, colors, and small programs
+                while improving my skills one project at a time.
+            </p>
+        </div>
+    </section>
+
+    <footer>
+        © 2026 Tyrone James • Built with HTML & CSS
+    </footer>
+
+</body>
+</html>
