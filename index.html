@@ -38,43 +38,117 @@
             overflow-x: hidden;
         }
 
-        /* Animated Background Grid */
-        .bg-grid {
+        /* MULTI-LAYER PARALLAX BACKGROUND SYSTEM */
+        .parallax-wrapper {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            pointer-events: none;
+            z-index: -3;
+            overflow: hidden;
+        }
+
+        .parallax-layer {
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            left: -10%;
+            top: -10%;
+        }
+
+        /* Layer 1: Deep background grid - moves slowest */
+        .parallax-grid-deep {
             background-image: 
-                linear-gradient(rgba(212, 175, 55, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(212, 175, 55, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            z-index: -2;
-            animation: gridMove 20s linear infinite;
+                linear-gradient(rgba(212, 175, 55, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212, 175, 55, 0.02) 1px, transparent 1px);
+            background-size: 80px 80px;
+            transform: translateZ(-50px) scale(1.5);
         }
 
-        @keyframes gridMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(50px, 50px); }
+        /* Layer 2: Mid grid - moves medium */
+        .parallax-grid-mid {
+            background-image: 
+                linear-gradient(rgba(212, 175, 55, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212, 175, 55, 0.04) 1px, transparent 1px);
+            background-size: 40px 40px;
+            transform: translateZ(-25px) scale(1.25);
         }
 
-        /* Ambient Glow */
+        /* Layer 3: Floating geometric shapes */
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .shape {
+            position: absolute;
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            animation: float-shape 20s ease-in-out infinite;
+        }
+
+        .shape:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            transform: rotate(45deg);
+            top: 60%;
+            right: 15%;
+            animation-delay: -5s;
+        }
+
+        .shape:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border-style: dashed;
+            top: 40%;
+            left: 80%;
+            animation-delay: -10s;
+        }
+
+        .shape:nth-child(4) {
+            width: 200px;
+            height: 200px;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            bottom: 20%;
+            left: 5%;
+            animation-delay: -15s;
+        }
+
+        @keyframes float-shape {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(10deg); }
+        }
+
+        /* Ambient Glow with Parallax */
         .ambient-glow {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 800px;
-            height: 800px;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
-            z-index: -1;
+            width: 1000px;
+            height: 1000px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 60%);
+            z-index: -2;
             pointer-events: none;
             animation: pulse 8s ease-in-out infinite;
+            transition: transform 0.3s ease-out;
         }
 
         @keyframes pulse {
             0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+            50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.2); }
         }
 
         /* Navigation */
@@ -83,7 +157,7 @@
             top: 0;
             width: 100%;
             padding: 25px 50px;
-            background: rgba(5, 5, 5, 0.9);
+            background: rgba(5, 5, 5, 0.8);
             backdrop-filter: blur(20px);
             z-index: 1000;
             display: flex;
@@ -91,6 +165,12 @@
             align-items: center;
             border-bottom: 1px solid rgba(212, 175, 55, 0.1);
             transition: all 0.3s;
+            transform: translateY(0);
+            transition: transform 0.3s, background 0.3s, padding 0.3s;
+        }
+
+        nav.hidden {
+            transform: translateY(-100%);
         }
 
         .logo {
@@ -100,6 +180,11 @@
             color: var(--gold);
             letter-spacing: 2px;
             text-decoration: none;
+            transition: transform 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.1);
         }
 
         .nav-links {
@@ -117,6 +202,7 @@
             text-transform: uppercase;
             position: relative;
             transition: color 0.3s;
+            display: inline-block;
         }
 
         .nav-links a::after {
@@ -132,13 +218,14 @@
 
         .nav-links a:hover {
             color: var(--gold);
+            transform: translateY(-2px);
         }
 
         .nav-links a:hover::after {
             width: 100%;
         }
 
-        /* Hero Section */
+        /* Hero Section with Parallax */
         .hero {
             min-height: 100vh;
             display: flex;
@@ -147,6 +234,7 @@
             padding: 120px 20px 80px;
             position: relative;
             perspective: 1000px;
+            overflow: hidden;
         }
 
         .hero-container {
@@ -156,15 +244,18 @@
             max-width: 1200px;
             width: 100%;
             align-items: center;
+            position: relative;
+            z-index: 2;
         }
 
-        /* Profile Image Styling - ENHANCED WITH PARALLAX */
+        /* Profile Section - Enhanced Parallax */
         .profile-section {
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
             transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
         }
 
         .profile-frame {
@@ -173,6 +264,45 @@
             height: 350px;
             transform-style: preserve-3d;
             transition: transform 0.1s ease-out;
+            will-change: transform;
+        }
+
+        .profile-orbit {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 500px;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            border-radius: 50%;
+            animation: orbit-rotate 30s linear infinite;
+        }
+
+        .profile-orbit::before,
+        .profile-orbit::after {
+            content: '';
+            position: absolute;
+            border: 1px solid rgba(212, 175, 55, 0.08);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .profile-orbit::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .profile-orbit::after {
+            width: 600px;
+            height: 600px;
+        }
+
+        @keyframes orbit-rotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
         .profile-img-container {
@@ -186,6 +316,13 @@
                 0 0 60px rgba(212, 175, 55, 0.3),
                 0 0 100px rgba(212, 175, 55, 0.1),
                 inset 0 0 60px rgba(0,0,0,0.5);
+            transition: box-shadow 0.3s;
+        }
+
+        .profile-img-container:hover {
+            box-shadow: 
+                0 0 80px rgba(212, 175, 55, 0.5),
+                0 0 120px rgba(212, 175, 55, 0.3);
         }
 
         .profile-img {
@@ -198,18 +335,10 @@
                         linear-gradient(135deg, var(--gold), var(--gold-light), var(--gold)) border-box;
             position: relative;
             z-index: 2;
-            transition: all 0.4s ease;
-            transform: translateZ(50px);
+            transition: transform 0.3s ease-out;
+            transform: translateZ(30px) scale(1.1);
         }
 
-        .profile-img:hover {
-            transform: translateZ(50px) scale(1.05);
-            box-shadow: 
-                0 0 80px rgba(212, 175, 55, 0.5),
-                0 0 120px rgba(212, 175, 55, 0.3);
-        }
-
-        /* Glassmorphism Overlay on Image */
         .profile-glass-overlay {
             position: absolute;
             top: 0;
@@ -219,15 +348,15 @@
             border-radius: 50%;
             background: linear-gradient(
                 135deg,
-                rgba(212, 175, 55, 0.1) 0%,
+                rgba(212, 175, 55, 0.15) 0%,
                 transparent 50%,
-                rgba(212, 175, 55, 0.05) 100%
+                rgba(212, 175, 55, 0.08) 100%
             );
             z-index: 3;
             pointer-events: none;
         }
 
-        /* Decorative Rings - Enhanced Animation */
+        /* Decorative Rings with Different Parallax Speeds */
         .ring {
             position: absolute;
             border: 1px solid rgba(212, 175, 55, 0.3);
@@ -260,26 +389,45 @@
             animation: rotate 35s linear infinite;
         }
 
-        /* Floating Particles */
-        .particle {
+        /* Floating Particles Around Profile */
+        .particle-system {
             position: absolute;
-            width: 6px;
-            height: 6px;
-            background: var(--gold);
-            border-radius: 50%;
-            opacity: 0.6;
-            box-shadow: 0 0 10px var(--gold);
-            animation: float 6s ease-in-out infinite;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
         }
 
-        .particle:nth-child(1) { top: -20px; left: 50%; animation-delay: 0s; }
-        .particle:nth-child(2) { top: 50%; right: -20px; animation-delay: 1.5s; }
-        .particle:nth-child(3) { bottom: -20px; left: 50%; animation-delay: 3s; }
-        .particle:nth-child(4) { top: 50%; left: -20px; animation-delay: 4.5s; }
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--gold);
+            border-radius: 50%;
+            opacity: 0.8;
+            box-shadow: 0 0 15px var(--gold), 0 0 30px var(--gold);
+            animation: particle-float 8s ease-in-out infinite;
+        }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0) scale(1); opacity: 0.6; }
-            50% { transform: translateY(-20px) scale(1.2); opacity: 1; }
+        .particle:nth-child(1) { top: -30px; left: 50%; animation-delay: 0s; }
+        .particle:nth-child(2) { top: 50%; right: -30px; animation-delay: 1s; }
+        .particle:nth-child(3) { bottom: -30px; left: 50%; animation-delay: 2s; }
+        .particle:nth-child(4) { top: 50%; left: -30px; animation-delay: 3s; }
+        .particle:nth-child(5) { top: 0; left: 0; animation-delay: 4s; }
+        .particle:nth-child(6) { top: 0; right: 0; animation-delay: 5s; }
+        .particle:nth-child(7) { bottom: 0; left: 0; animation-delay: 6s; }
+        .particle:nth-child(8) { bottom: 0; right: 0; animation-delay: 7s; }
+
+        @keyframes particle-float {
+            0%, 100% { 
+                transform: translateY(0) scale(1); 
+                opacity: 0.6; 
+            }
+            50% { 
+                transform: translateY(-30px) scale(1.3); 
+                opacity: 1; 
+            }
         }
 
         @keyframes rotate {
@@ -287,7 +435,6 @@
             to { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
-        /* Glow Effect Behind Image */
         .profile-glow {
             position: absolute;
             top: 50%;
@@ -295,7 +442,7 @@
             transform: translate(-50%, -50%);
             width: 400px;
             height: 400px;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.4) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.5) 0%, transparent 70%);
             filter: blur(40px);
             z-index: -1;
             animation: glowPulse 4s ease-in-out infinite;
@@ -303,11 +450,13 @@
 
         @keyframes glowPulse {
             0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+            50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.2); }
         }
 
-        /* Hero Content */
+        /* Hero Content with Parallax */
         .hero-content {
+            position: relative;
+            z-index: 2;
             animation: fadeInRight 1s ease-out;
         }
 
@@ -318,6 +467,24 @@
             text-transform: uppercase;
             margin-bottom: 20px;
             display: block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-label::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, var(--gold), transparent);
+            animation: line-scan 3s ease-in-out infinite;
+        }
+
+        @keyframes line-scan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
 
         .hero h1 {
@@ -330,6 +497,20 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero h1::before {
+            content: 'Tyrone';
+            position: absolute;
+            top: -10px;
+            left: 0;
+            font-size: 0.3em;
+            opacity: 0.3;
+            letter-spacing: 10px;
+            text-transform: uppercase;
+            -webkit-text-fill-color: var(--gold);
         }
 
         .hero-subtitle {
@@ -337,6 +518,8 @@
             color: var(--text-muted);
             margin-bottom: 30px;
             font-weight: 300;
+            position: relative;
+            display: inline-block;
         }
 
         .hero-description {
@@ -345,11 +528,13 @@
             line-height: 1.8;
             margin-bottom: 40px;
             max-width: 500px;
+            position: relative;
         }
 
         .cta-buttons {
             display: flex;
             gap: 20px;
+            position: relative;
         }
 
         .btn {
@@ -364,6 +549,7 @@
             transition: all 0.3s;
             position: relative;
             overflow: hidden;
+            display: inline-block;
         }
 
         .btn::before {
@@ -380,6 +566,8 @@
 
         .btn:hover {
             color: var(--dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
         }
 
         .btn:hover::before {
@@ -397,6 +585,7 @@
 
         .btn-primary:hover {
             color: var(--gold);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.5);
         }
 
         @keyframes fadeInRight {
@@ -410,16 +599,18 @@
             }
         }
 
-        /* Section Styling */
+        /* Section Styling with Parallax */
         section {
             padding: 100px 20px;
             max-width: 1200px;
             margin: 0 auto;
+            position: relative;
         }
 
         .section-header {
             text-align: center;
             margin-bottom: 80px;
+            position: relative;
         }
 
         .section-label {
@@ -429,6 +620,7 @@
             text-transform: uppercase;
             margin-bottom: 15px;
             display: block;
+            position: relative;
         }
 
         .section-header h2 {
@@ -436,13 +628,27 @@
             font-size: clamp(2.5rem, 5vw, 3.5rem);
             font-weight: 600;
             color: #fff;
+            position: relative;
+            display: inline-block;
         }
 
-        /* Projects Grid */
+        .section-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        /* Projects Grid with Hover Parallax */
         .projects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 30px;
+            perspective: 1000px;
         }
 
         .project-card {
@@ -454,6 +660,8 @@
             overflow: hidden;
             transition: all 0.4s;
             backdrop-filter: blur(10px);
+            transform-style: preserve-3d;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
         .project-card::before {
@@ -471,8 +679,10 @@
 
         .project-card:hover {
             border-color: rgba(212, 175, 55, 0.3);
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            transform: translateY(-10px) translateZ(20px) rotateX(5deg);
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.4),
+                0 0 60px rgba(212, 175, 55, 0.1);
         }
 
         .project-card:hover::before {
@@ -481,12 +691,18 @@
 
         .project-number {
             font-family: 'Playfair Display', serif;
-            font-size: 3rem;
-            color: rgba(212, 175, 55, 0.2);
+            font-size: 4rem;
+            color: rgba(212, 175, 55, 0.1);
             position: absolute;
-            top: 20px;
-            right: 30px;
+            top: 10px;
+            right: 20px;
             font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .project-card:hover .project-number {
+            color: rgba(212, 175, 55, 0.3);
+            transform: scale(1.2) translateZ(30px);
         }
 
         .project-card h3 {
@@ -494,12 +710,22 @@
             font-size: 1.5rem;
             margin-bottom: 15px;
             color: var(--gold-light);
+            transition: transform 0.3s;
+        }
+
+        .project-card:hover h3 {
+            transform: translateZ(20px);
         }
 
         .project-card p {
             color: var(--text-muted);
             line-height: 1.8;
             margin-bottom: 25px;
+            transition: transform 0.3s;
+        }
+
+        .project-card:hover p {
+            transform: translateZ(10px);
         }
 
         .project-tags {
@@ -516,16 +742,23 @@
             font-size: 0.75rem;
             color: var(--gold);
             letter-spacing: 1px;
+            transition: all 0.3s;
         }
 
-        /* Skills Section */
+        .project-tag:hover {
+            background: rgba(212, 175, 55, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Skills Section with Floating Animation */
         .skills-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 20px;
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
+            perspective: 1000px;
         }
 
         .skill-item {
@@ -539,6 +772,7 @@
             cursor: default;
             position: relative;
             overflow: hidden;
+            transform-style: preserve-3d;
         }
 
         .skill-item::before {
@@ -548,22 +782,22 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
             transition: left 0.5s;
         }
 
         .skill-item:hover {
             border-color: var(--gold);
             color: var(--gold);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.1);
+            transform: translateY(-5px) translateZ(10px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.2);
         }
 
         .skill-item:hover::before {
             left: 100%;
         }
 
-        /* About Section */
+        /* About Section with Parallax Stats */
         .about-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -579,17 +813,39 @@
 
         .about-text p {
             margin-bottom: 25px;
+            transition: transform 0.3s;
+        }
+
+        .about-text p:hover {
+            transform: translateX(10px);
         }
 
         .about-text .highlight {
             color: var(--gold);
             font-weight: 500;
+            position: relative;
+        }
+
+        .about-text .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--gold);
+            transition: width 0.3s;
+        }
+
+        .about-text p:hover .highlight::after {
+            width: 100%;
         }
 
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 20px;
+            perspective: 1000px;
         }
 
         .stat-box {
@@ -598,20 +854,47 @@
             padding: 40px;
             text-align: center;
             border-radius: 10px;
-            transition: all 0.3s;
+            transition: all 0.4s;
+            transform-style: preserve-3d;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
         .stat-box:hover {
             border-color: rgba(212, 175, 55, 0.3);
-            transform: translateY(-5px);
+            transform: translateY(-10px) translateZ(30px) rotateX(10deg);
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.1);
+        }
+
+        .stat-box:hover::before {
+            opacity: 1;
         }
 
         .stat-number {
             font-family: 'Playfair Display', serif;
-            font-size: 3rem;
+            font-size: 3.5rem;
             color: var(--gold);
             font-weight: 600;
             display: block;
+            transition: transform 0.3s;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-box:hover .stat-number {
+            transform: scale(1.2) translateZ(20px);
         }
 
         .stat-label {
@@ -620,27 +903,53 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             margin-top: 10px;
+            transition: transform 0.3s;
         }
 
-        /* Footer */
+        .stat-box:hover .stat-label {
+            transform: translateZ(10px);
+        }
+
+        /* Footer with Parallax */
         footer {
             background: rgba(0,0,0,0.3);
             padding: 80px 20px 40px;
             text-align: center;
             border-top: 1px solid rgba(212, 175, 55, 0.1);
             margin-top: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
+            pointer-events: none;
         }
 
         .footer-content {
             max-width: 600px;
             margin: 0 auto;
+            position: relative;
+            z-index: 2;
         }
 
         .footer-logo {
             font-family: 'Playfair Display', serif;
-            font-size: 2rem;
+            font-size: 2.5rem;
             color: var(--gold);
             margin-bottom: 20px;
+            display: inline-block;
+            transition: transform 0.3s;
+        }
+
+        .footer-logo:hover {
+            transform: scale(1.1) rotate(5deg);
         }
 
         .social-links {
@@ -662,13 +971,32 @@
             text-decoration: none;
             transition: all 0.3s;
             font-size: 1.2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gold);
+            transform: scale(0);
+            transition: transform 0.3s;
+            border-radius: 50%;
+            z-index: -1;
         }
 
         .social-link:hover {
-            background: var(--gold);
             color: var(--dark);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+        }
+
+        .social-link:hover::before {
+            transform: scale(1);
         }
 
         .footer-text {
@@ -679,6 +1007,42 @@
 
         .footer-text span {
             color: var(--gold);
+            animation: heartbeat 2s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* Scroll Progress Bar */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            z-index: 1001;
+            transition: width 0.1s;
+        }
+
+        /* Custom Cursor Effect */
+        .cursor-glow {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s;
+            opacity: 0;
+        }
+
+        body:hover .cursor-glow {
+            opacity: 1;
         }
 
         /* Responsive */
@@ -700,6 +1064,21 @@
             .profile-frame {
                 width: 280px;
                 height: 280px;
+            }
+
+            .profile-orbit {
+                width: 380px;
+                height: 380px;
+            }
+
+            .profile-orbit::before {
+                width: 320px;
+                height: 320px;
+            }
+
+            .profile-orbit::after {
+                width: 440px;
+                height: 440px;
             }
 
             .ring-1 { width: 340px; height: 340px; }
@@ -731,12 +1110,16 @@
             .nav-links {
                 display: none;
             }
+
+            .cursor-glow {
+                display: none;
+            }
         }
 
         /* Scroll Reveal Animation */
         .reveal {
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(50px);
             transition: all 0.8s ease-out;
         }
 
@@ -744,40 +1127,69 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* Text Scramble Effect Container */
+        .scramble-text {
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
-    <div class="bg-grid"></div>
-    <div class="ambient-glow"></div>
+    <!-- Scroll Progress -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Custom Cursor Glow -->
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <!-- Multi-layer Parallax Background -->
+    <div class="parallax-wrapper" id="parallaxWrapper">
+        <div class="parallax-layer parallax-grid-deep" data-speed="0.2"></div>
+        <div class="parallax-layer parallax-grid-mid" data-speed="0.5"></div>
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+    </div>
+
+    <div class="ambient-glow" id="ambientGlow"></div>
 
     <!-- Navigation -->
-    <nav>
-        <a href="#" class="logo">TJ.</a>
+    <nav id="navbar">
+        <a href="#" class="logo" id="logo">TJ.</a>
         <ul class="nav-links">
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#projects" class="nav-link">Projects</a></li>
+            <li><a href="#skills" class="nav-link">Skills</a></li>
+            <li><a href="#about" class="nav-link">About</a></li>
+            <li><a href="#contact" class="nav-link">Contact</a></li>
         </ul>
     </nav>
 
     <!-- Hero Section -->
-    <div class="hero">
+    <div class="hero" id="hero">
         <div class="hero-container">
             <div class="profile-section" id="profileSection">
                 <div class="profile-frame" id="profileFrame">
+                    <div class="profile-orbit"></div>
                     <div class="profile-glow"></div>
                     <div class="ring ring-1"></div>
                     <div class="ring ring-2"></div>
                     <div class="ring ring-3"></div>
                     
                     <!-- Floating Particles -->
-                    <div class="particle"></div>
-                    <div class="particle"></div>
-                    <div class="particle"></div>
-                    <div class="particle"></div>
+                    <div class="particle-system">
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                    </div>
                     
-                    <div class="profile-img-container">
+                    <div class="profile-img-container" id="profileImgContainer">
                         <img src="formal photo of me.jpg" 
                              alt="Tyrone James" 
                              class="profile-img"
@@ -787,11 +1199,11 @@
                 </div>
             </div>
             
-            <div class="hero-content">
+            <div class="hero-content" id="heroContent">
                 <span class="hero-label">Developer & Designer</span>
-                <h1>Tyrone<br>James</h1>
-                <p class="hero-subtitle">3BSIT2 • Asiatech College</p>
-                <p class="hero-description">
+                <h1 id="heroTitle">Tyrone<br>James</h1>
+                <p class="hero-subtitle" id="heroSubtitle">3BSIT2 • Asiatech College</p>
+                <p class="hero-description" id="heroDesc">
                     Crafting elegant digital experiences through code and creativity. 
                     Passionate about building modern web solutions with attention to detail 
                     and sophisticated design.
@@ -812,7 +1224,7 @@
         </div>
         
         <div class="projects-grid">
-            <div class="project-card reveal">
+            <div class="project-card reveal" data-tilt>
                 <span class="project-number">01</span>
                 <h3>Portfolio Website</h3>
                 <p>A sophisticated personal website featuring modern glassmorphism design, smooth animations, and responsive layout built with pure HTML5 and CSS3.</p>
@@ -823,7 +1235,7 @@
                 </div>
             </div>
 
-            <div class="project-card reveal">
+            <div class="project-card reveal" data-tilt>
                 <span class="project-number">02</span>
                 <h3>Python Calculator</h3>
                 <p>An elegant command-line calculator application featuring advanced mathematical operations, robust error handling, and a refined user interface.</p>
@@ -834,7 +1246,7 @@
                 </div>
             </div>
 
-            <div class="project-card reveal">
+            <div class="project-card reveal" data-tilt>
                 <span class="project-number">03</span>
                 <h3>UI Component Library</h3>
                 <p>A curated collection of reusable interface components focusing on accessibility, micro-interactions, and premium visual design patterns.</p>
@@ -855,15 +1267,15 @@
         </div>
         
         <div class="skills-container reveal">
-            <div class="skill-item">HTML5</div>
-            <div class="skill-item">CSS3</div>
-            <div class="skill-item">JavaScript</div>
-            <div class="skill-item">Python</div>
-            <div class="skill-item">Git</div>
-            <div class="skill-item">GitHub</div>
-            <div class="skill-item">VS Code</div>
-            <div class="skill-item">Responsive Design</div>
-            <div class="skill-item">UI/UX Design</div>
+            <div class="skill-item" data-float="1">HTML5</div>
+            <div class="skill-item" data-float="2">CSS3</div>
+            <div class="skill-item" data-float="3">JavaScript</div>
+            <div class="skill-item" data-float="4">Python</div>
+            <div class="skill-item" data-float="5">Git</div>
+            <div class="skill-item" data-float="6">GitHub</div>
+            <div class="skill-item" data-float="7">VS Code</div>
+            <div class="skill-item" data-float="8">Responsive Design</div>
+            <div class="skill-item" data-float="9">UI/UX Design</div>
         </div>
     </section>
 
@@ -888,19 +1300,19 @@
             </div>
             
             <div class="stats-grid reveal">
-                <div class="stat-box">
+                <div class="stat-box" data-tilt>
                     <span class="stat-number">3+</span>
                     <div class="stat-label">Projects</div>
                 </div>
-                <div class="stat-box">
+                <div class="stat-box" data-tilt>
                     <span class="stat-number">5+</span>
                     <div class="stat-label">Technologies</div>
                 </div>
-                <div class="stat-box">
+                <div class="stat-box" data-tilt>
                     <span class="stat-number">100%</span>
                     <div class="stat-label">Dedication</div>
                 </div>
-                <div class="stat-box">
+                <div class="stat-box" data-tilt>
                     <span class="stat-number">∞</span>
                     <div class="stat-label">Passion</div>
                 </div>
@@ -953,24 +1365,56 @@
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // Navbar background on scroll
+        // Navbar hide/show on scroll
+        let lastScroll = 0;
+        const navbar = document.getElementById('navbar');
+        
         window.addEventListener('scroll', () => {
-            const nav = document.querySelector('nav');
-            if (window.scrollY > 100) {
-                nav.style.background = 'rgba(5, 5, 5, 0.95)';
-                nav.style.padding = '20px 50px';
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > lastScroll && currentScroll > 100) {
+                navbar.classList.add('hidden');
             } else {
-                nav.style.background = 'rgba(5, 5, 5, 0.9)';
-                nav.style.padding = '25px 50px';
+                navbar.classList.remove('hidden');
             }
+            
+            if (currentScroll > 100) {
+                navbar.style.background = 'rgba(5, 5, 5, 0.98)';
+                navbar.style.padding = '15px 50px';
+            } else {
+                navbar.style.background = 'rgba(5, 5, 5, 0.8)';
+                navbar.style.padding = '25px 50px';
+            }
+            
+            lastScroll = currentScroll;
         });
 
-        // PARALLAX & 3D TILT EFFECT FOR PROFILE IMAGE
+        // Scroll Progress Bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('scrollProgress').style.width = scrolled + '%';
+        });
+
+        // Custom Cursor Glow
+        const cursorGlow = document.getElementById('cursorGlow');
+        document.addEventListener('mousemove', (e) => {
+            cursorGlow.style.left = e.clientX + 'px';
+            cursorGlow.style.top = e.clientY + 'px';
+        });
+
+        // ==========================================
+        // EXTENSIVE PARALLAX EFFECTS SYSTEM
+        // ==========================================
+
+        // 1. MOUSE MOVE PARALLAX - Profile 3D Tilt
         const profileSection = document.getElementById('profileSection');
         const profileFrame = document.getElementById('profileFrame');
         const profileImg = document.getElementById('profileImg');
+        const profileImgContainer = document.getElementById('profileImgContainer');
+        const heroContent = document.getElementById('heroContent');
 
-        // Mouse move parallax effect
         document.addEventListener('mousemove', (e) => {
             const { clientX, clientY } = e;
             const { innerWidth, innerHeight } = window;
@@ -979,38 +1423,243 @@
             const xPos = (clientX / innerWidth - 0.5) * 2;
             const yPos = (clientY / innerHeight - 0.5) * 2;
             
-            // Apply 3D tilt to the frame
-            const rotateX = yPos * -15; // Tilt up/down
-            const rotateY = xPos * 15;  // Tilt left/right
+            // Profile Frame 3D Tilt
+            const rotateX = yPos * -20;
+            const rotateY = xPos * 20;
             
             profileFrame.style.transform = `
                 perspective(1000px)
                 rotateX(${rotateX}deg)
                 rotateY(${rotateY}deg)
-                translateZ(20px)
-            `;
-            
-            // Move image slightly more for depth (parallax)
-            const imgMoveX = xPos * 10;
-            const imgMoveY = yPos * 10;
-            
-            profileImg.style.transform = `
                 translateZ(50px)
-                translateX(${imgMoveX}px)
-                translateY(${imgMoveY}px)
-                scale(1.1)
             `;
+            
+            // Profile Image moves more (parallax depth)
+            profileImg.style.transform = `
+                translateZ(80px)
+                translateX(${xPos * 15}px)
+                translateY(${yPos * 15}px)
+                scale(1.15)
+            `;
+            
+            // Glass overlay moves slightly less
+            document.querySelector('.profile-glass-overlay').style.transform = `
+                translateX(${xPos * 5}px)
+                translateY(${yPos * 5}px)
+            `;
+            
+            // Hero Content moves opposite (background feel)
+            heroContent.style.transform = `
+                translateX(${xPos * -10}px)
+                translateY(${yPos * -10}px)
+            `;
+            
+            // Ambient Glow follows mouse slightly
+            const ambientGlow = document.getElementById('ambientGlow');
+            ambientGlow.style.transform = `
+                translate(calc(-50% + ${xPos * 30}px), calc(-50% + ${yPos * 30}px))
+                scale(${1 + Math.abs(xPos * 0.1)})
+            `;
+            
+            // Floating shapes parallax
+            document.querySelectorAll('.shape').forEach((shape, index) => {
+                const speed = (index + 1) * 0.5;
+                shape.style.transform = `
+                    translate(${xPos * 20 * speed}px, ${yPos * 20 * speed}px)
+                    rotate(${xPos * 10}deg)
+                `;
+            });
         });
 
         // Reset on mouse leave
         document.addEventListener('mouseleave', () => {
             profileFrame.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
-            profileImg.style.transform = 'translateZ(50px) scale(1)';
+            profileImg.style.transform = 'translateZ(30px) scale(1.1)';
+            heroContent.style.transform = 'translateX(0) translateY(0)';
+            document.querySelectorAll('.shape').forEach(shape => {
+                shape.style.transform = '';
+            });
         });
 
-        // Smooth reset transition
-        profileFrame.style.transition = 'transform 0.1s ease-out';
-        profileImg.style.transition = 'transform 0.1s ease-out';
+        // 2. SCROLL PARALLAX - Background Layers
+        const parallaxWrapper = document.getElementById('parallaxWrapper');
+        const layers = document.querySelectorAll('.parallax-layer');
+
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            
+            layers.forEach(layer => {
+                const speed = parseFloat(layer.getAttribute('data-speed')) || 0.5;
+                const yPos = -(scrolled * speed);
+                layer.style.transform = `translateY(${yPos}px)`;
+            });
+            
+            // Hero parallax on scroll
+            const hero = document.getElementById('hero');
+            const heroOffset = scrolled * 0.5;
+            hero.style.backgroundPositionY = heroOffset + 'px';
+            
+            // Profile moves slower than scroll
+            if (scrolled < window.innerHeight) {
+                profileSection.style.transform = `translateY(${scrolled * 0.3}px)`;
+            }
+        });
+
+        // 3. CARD TILT EFFECT - Project Cards & Stats
+        document.querySelectorAll('[data-tilt]').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+                
+                card.style.transform = `
+                    perspective(1000px)
+                    rotateX(${rotateX}deg)
+                    rotateY(${rotateY}deg)
+                    translateZ(20px)
+                    scale(1.05)
+                `;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0) scale(1)';
+            });
+        });
+
+        // 4. FLOATING ANIMATION - Skills
+        document.querySelectorAll('[data-float]').forEach((item, index) => {
+            const delay = parseFloat(item.getAttribute('data-float')) * 0.2;
+            item.style.animation = `float-skill 4s ease-in-out ${delay}s infinite`;
+        });
+
+        // Add float animation dynamically
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float-skill {
+                0%, 100% { transform: translateY(0) translateZ(0); }
+                50% { transform: translateY(-10px) translateZ(10px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 5. TEXT SCRAMBLE EFFECT - Hero Title
+        class TextScramble {
+            constructor(el) {
+                this.el = el;
+                this.chars = '!<>-_\\/[]{}—=+*^?#________';
+                this.update = this.update.bind(this);
+            }
+            
+            setText(newText) {
+                const oldText = this.el.innerText;
+                const length = Math.max(oldText.length, newText.length);
+                const promise = new Promise((resolve) => this.resolve = resolve);
+                this.queue = [];
+                
+                for (let i = 0; i < length; i++) {
+                    const from = oldText[i] || '';
+                    const to = newText[i] || '';
+                    const start = Math.floor(Math.random() * 40);
+                    const end = start + Math.floor(Math.random() * 40);
+                    this.queue.push({ from, to, start, end });
+                }
+                
+                cancelAnimationFrame(this.frameRequest);
+                this.frame = 0;
+                this.update();
+                return promise;
+            }
+            
+            update() {
+                let output = '';
+                let complete = 0;
+                
+                for (let i = 0, n = this.queue.length; i < n; i++) {
+                    let { from, to, start, end, char } = this.queue[i];
+                    
+                    if (this.frame >= end) {
+                        complete++;
+                        output += to;
+                    } else if (this.frame >= start) {
+                        if (!char || Math.random() < 0.28) {
+                            char = this.randomChar();
+                            this.queue[i].char = char;
+                        }
+                        output += `<span class="scramble-text" style="color: var(--gold)">${char}</span>`;
+                    } else {
+                        output += from;
+                    }
+                }
+                
+                this.el.innerHTML = output;
+                
+                if (complete === this.queue.length) {
+                    this.resolve();
+                } else {
+                    this.frameRequest = requestAnimationFrame(this.update);
+                    this.frame++;
+                }
+            }
+            
+            randomChar() {
+                return this.chars[Math.floor(Math.random() * this.chars.length)];
+            }
+        }
+
+        // Trigger scramble on load
+        const heroTitle = document.getElementById('heroTitle');
+        const fx = new TextScramble(heroTitle);
+        
+        setTimeout(() => {
+            fx.setText('Tyrone<br>James');
+        }, 500);
+
+        // 6. MAGNETIC EFFECT - Buttons
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+            });
+            
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = 'translate(0, 0)';
+            });
+        });
+
+        // 7. SMOOTH PARALLAX FOR ALL SECTIONS
+        let ticking = false;
+        
+        function updateParallax() {
+            const scrolled = window.pageYOffset;
+            
+            // Parallax for section headers
+            document.querySelectorAll('.section-header').forEach(header => {
+                const rect = header.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    const speed = 0.1;
+                    const yPos = (rect.top - window.innerHeight / 2) * speed;
+                    header.style.transform = `translateY(${yPos}px)`;
+                }
+            });
+            
+            ticking = false;
+        }
+        
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(updateParallax);
+                ticking = true;
+            }
+        });
     </script>
 </body>
 </html>
