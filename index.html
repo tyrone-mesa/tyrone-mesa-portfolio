@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tyrone James | Developer & Designer</title>
-    <img src="formal photo of me.jpg" alt="Profile Picture">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -147,6 +146,7 @@
             justify-content: center;
             padding: 120px 20px 80px;
             position: relative;
+            perspective: 1000px;
         }
 
         .hero-container {
@@ -158,18 +158,34 @@
             align-items: center;
         }
 
-        /* Profile Image Styling */
+        /* Profile Image Styling - ENHANCED WITH PARALLAX */
         .profile-section {
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
+            transform-style: preserve-3d;
         }
 
         .profile-frame {
             position: relative;
             width: 350px;
             height: 350px;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+
+        .profile-img-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            box-shadow: 
+                0 0 60px rgba(212, 175, 55, 0.3),
+                0 0 100px rgba(212, 175, 55, 0.1),
+                inset 0 0 60px rgba(0,0,0,0.5);
         }
 
         .profile-img {
@@ -180,56 +196,114 @@
             border: 3px solid transparent;
             background: linear-gradient(var(--darker), var(--darker)) padding-box,
                         linear-gradient(135deg, var(--gold), var(--gold-light), var(--gold)) border-box;
-            box-shadow: 
-                0 0 60px rgba(212, 175, 55, 0.2),
-                0 0 100px rgba(212, 175, 55, 0.1),
-                inset 0 0 60px rgba(0,0,0,0.5);
             position: relative;
             z-index: 2;
             transition: all 0.4s ease;
+            transform: translateZ(50px);
         }
 
         .profile-img:hover {
-            transform: scale(1.02);
+            transform: translateZ(50px) scale(1.05);
             box-shadow: 
-                0 0 80px rgba(212, 175, 55, 0.4),
-                0 0 120px rgba(212, 175, 55, 0.2),
-                inset 0 0 60px rgba(0,0,0,0.5);
+                0 0 80px rgba(212, 175, 55, 0.5),
+                0 0 120px rgba(212, 175, 55, 0.3);
         }
 
-        /* Decorative Rings */
+        /* Glassmorphism Overlay on Image */
+        .profile-glass-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(
+                135deg,
+                rgba(212, 175, 55, 0.1) 0%,
+                transparent 50%,
+                rgba(212, 175, 55, 0.05) 100%
+            );
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        /* Decorative Rings - Enhanced Animation */
         .ring {
             position: absolute;
-            border: 1px solid rgba(212, 175, 55, 0.2);
+            border: 1px solid rgba(212, 175, 55, 0.3);
             border-radius: 50%;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            pointer-events: none;
         }
 
         .ring-1 {
-            width: 400px;
-            height: 400px;
+            width: 420px;
+            height: 420px;
             animation: rotate 20s linear infinite;
+            border-style: dashed;
+            border-width: 2px;
         }
 
         .ring-2 {
-            width: 450px;
-            height: 450px;
-            border-style: dashed;
-            animation: rotate 30s linear infinite reverse;
+            width: 480px;
+            height: 480px;
+            border: 2px solid rgba(212, 175, 55, 0.15);
+            animation: rotate 25s linear infinite reverse;
         }
 
         .ring-3 {
-            width: 500px;
-            height: 500px;
+            width: 540px;
+            height: 540px;
             border: 1px solid rgba(212, 175, 55, 0.1);
-            animation: rotate 40s linear infinite;
+            animation: rotate 35s linear infinite;
+        }
+
+        /* Floating Particles */
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--gold);
+            border-radius: 50%;
+            opacity: 0.6;
+            box-shadow: 0 0 10px var(--gold);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .particle:nth-child(1) { top: -20px; left: 50%; animation-delay: 0s; }
+        .particle:nth-child(2) { top: 50%; right: -20px; animation-delay: 1.5s; }
+        .particle:nth-child(3) { bottom: -20px; left: 50%; animation-delay: 3s; }
+        .particle:nth-child(4) { top: 50%; left: -20px; animation-delay: 4.5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.6; }
+            50% { transform: translateY(-20px) scale(1.2); opacity: 1; }
         }
 
         @keyframes rotate {
             from { transform: translate(-50%, -50%) rotate(0deg); }
             to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Glow Effect Behind Image */
+        .profile-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.4) 0%, transparent 70%);
+            filter: blur(40px);
+            z-index: -1;
+            animation: glowPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
         }
 
         /* Hero Content */
@@ -624,13 +698,18 @@
             }
 
             .profile-frame {
-                width: 250px;
-                height: 250px;
+                width: 280px;
+                height: 280px;
             }
 
-            .ring-1 { width: 300px; height: 300px; }
-            .ring-2 { width: 340px; height: 340px; }
-            .ring-3 { width: 380px; height: 380px; }
+            .ring-1 { width: 340px; height: 340px; }
+            .ring-2 { width: 400px; height: 400px; }
+            .ring-3 { width: 460px; height: 460px; }
+            
+            .profile-glow {
+                width: 350px;
+                height: 350px;
+            }
 
             .hero-description {
                 margin: 0 auto 40px;
@@ -685,16 +764,26 @@
     <!-- Hero Section -->
     <div class="hero">
         <div class="hero-container">
-            <div class="profile-section">
-                <div class="profile-frame">
+            <div class="profile-section" id="profileSection">
+                <div class="profile-frame" id="profileFrame">
+                    <div class="profile-glow"></div>
                     <div class="ring ring-1"></div>
                     <div class="ring ring-2"></div>
                     <div class="ring ring-3"></div>
-                    <!-- Replace src with your actual image path -->
-                    <img src="./images/tyrone_profile.png" 
-                         alt="Tyrone James" 
-                         class="profile-img"
-                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22400%22%3E%3Crect width=%22400%22 height=%22400%22 fill=%22%23111%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 font-family=%22serif%22 font-size=%22120%22 fill=%22%23d4af37%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22%3ETJ%3C/text%3E%3C/svg%3E'">
+                    
+                    <!-- Floating Particles -->
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    
+                    <div class="profile-img-container">
+                        <img src="formal photo of me.jpg" 
+                             alt="Tyrone James" 
+                             class="profile-img"
+                             id="profileImg">
+                        <div class="profile-glass-overlay"></div>
+                    </div>
                 </div>
             </div>
             
@@ -875,6 +964,53 @@
                 nav.style.padding = '25px 50px';
             }
         });
+
+        // PARALLAX & 3D TILT EFFECT FOR PROFILE IMAGE
+        const profileSection = document.getElementById('profileSection');
+        const profileFrame = document.getElementById('profileFrame');
+        const profileImg = document.getElementById('profileImg');
+
+        // Mouse move parallax effect
+        document.addEventListener('mousemove', (e) => {
+            const { clientX, clientY } = e;
+            const { innerWidth, innerHeight } = window;
+            
+            // Calculate mouse position relative to center (-1 to 1)
+            const xPos = (clientX / innerWidth - 0.5) * 2;
+            const yPos = (clientY / innerHeight - 0.5) * 2;
+            
+            // Apply 3D tilt to the frame
+            const rotateX = yPos * -15; // Tilt up/down
+            const rotateY = xPos * 15;  // Tilt left/right
+            
+            profileFrame.style.transform = `
+                perspective(1000px)
+                rotateX(${rotateX}deg)
+                rotateY(${rotateY}deg)
+                translateZ(20px)
+            `;
+            
+            // Move image slightly more for depth (parallax)
+            const imgMoveX = xPos * 10;
+            const imgMoveY = yPos * 10;
+            
+            profileImg.style.transform = `
+                translateZ(50px)
+                translateX(${imgMoveX}px)
+                translateY(${imgMoveY}px)
+                scale(1.1)
+            `;
+        });
+
+        // Reset on mouse leave
+        document.addEventListener('mouseleave', () => {
+            profileFrame.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+            profileImg.style.transform = 'translateZ(50px) scale(1)';
+        });
+
+        // Smooth reset transition
+        profileFrame.style.transition = 'transform 0.1s ease-out';
+        profileImg.style.transition = 'transform 0.1s ease-out';
     </script>
 </body>
 </html>
